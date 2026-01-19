@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Toc-Toe</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+</head>
+
+<body class="flex justify-center items-center h-screen bg-gray-700">
+    <div class="flex flex-col items-center">
+        <h1 class="animate-bounce">
+            <span class="text-6xl font-bold text-blue-700">Tic</span>
+            <span class="text-3xl font-semibold text-sky-500">Toc</span>
+            <span class="text-xl text-blue-400">Toe</span>
+
+
+        </h1>
+        <div id="board" class="grid grid-cols-3 gap-1"></div>
+        <h1 class="text-white font-semibold text-center text-2xl mt-5 " id="img"></h1>
+        <button onclick="Restart()" id="reset"
+            class="bg-green-500 rounded-4xl h-10 w-30 text-2xl mt-5 cursor-pointer hover:bg-green-600 hover:text-white">Restart</button>
+
+
+    </div>
+
+    <script>
+        const img = document.getElementById('img');
+        img.innerHTML = `<h1 class="text-red-500 animate-bounce text-4xl">Let's Play <br> Player X's First Turn </h1>`;
+
+        let boardDiv = document.getElementById('board');
+
+
+
+        let boardCells = [
+            ["", "", "",],
+            ["", "", "",],
+            ["", "", "",]
+        ];
+
+
+        drawBoard();
+
+        function drawBoard() {
+
+            let boardHtml = "";
+
+            for (let row = 0; row < boardCells.length; row++) {
+                for (let col = 0; col < boardCells[row].length; col++) {
+                    if (boardCells[row][col] === 'X') {
+                        boardHtml += createXCellHtml(row, col);
+                    } else if (boardCells[row][col] === 'O') {
+                        boardHtml += createOCellHtml(row, col);
+
+                    } else {
+                        boardHtml += createblankCellHtml(row, col);
+
+                    }
+                }
+
+            }
+
+            boardDiv.innerHTML = boardHtml;
+        }
+        function Restart() {
+            let restart = document.getElementById('reset')
+             boardCells = [
+                ["", "", "",],
+                ["", "", "",],
+                ["", "", "",]
+            ];
+            drawBoard();
+            this.img.innerHTML=  `<h1 class="text-red-500 animate-bounce text-4xl">Let's Play Again</h1>`;
+            boardDiv.style.pointerEvents = "auto"
+
+
+
+           
+        }
+
+
+        function cellclicks(row, col) {
+            if (boardCells[row][col] === "") {
+                boardCells[row][col] = currentPlayer;
+                if (isWinner(currentPlayer)) {
+                    img.innerHTML = `<h1 class="text-red-500 text-5xl font-bold animate-ping">Player ${currentPlayer} wins!</h1>`;
+                } else {
+                    if (currentPlayer === 'X') {
+                        currentPlayer = 'O';
+                        img.innerHTML = ` <h1 class="text-red-500 text-3xl font-bold ">Player ${currentPlayer} Turn</h1>`;
+                    } else {
+                        currentPlayer = 'X';
+                        img.innerHTML = `<h1 class="text-blue-500 text-3xl font-bold ">Player ${currentPlayer} Turn</h1>`;
+                    }
+
+                }
+            }
+
+
+            drawBoard();
+        }
+
+        let currentPlayer = "X"
+
+        function isWinner(user) {
+            // for rows
+            for (let row = 0; row < boardCells.length; row++) {
+                if (boardCells[row][0] == user
+                    && boardCells[row][1] == user
+                    && boardCells[row][2] == user) {
+                    return true;
+                }
+
+            }
+            //    for columns 
+            for (let col = 0; col < 3; col++) {
+                if (boardCells[0][col] == user
+                    && boardCells[1][col] == user
+                    && boardCells[2][col] == user) {
+                    return true;
+                }
+
+            }
+            // for diagonal
+            if (boardCells[0][0] == user
+                && boardCells[1][1] == user
+                && boardCells[2][2] == user) {
+                return true;
+            }
+
+            if (boardCells[0][2] == user
+                && boardCells[1][1] == user
+                && boardCells[2][0] == user) {
+                return true;
+            }
+            return false;
+
+
+        }
+
+        function createXCellHtml(row, col) {
+            return `
+         <div onclick="cellclicks(${row}, ${col})" 
+         class=" flex items-center justify-center text-[30px] w-30 h-30  bg-blue-600 hover:bg-blue-700 cursor-pointer rounded-xl text-red-500  text-xl font-semibold ">
+         X
+         </div>
+       `;
+        }
+        function createOCellHtml(row, col) {
+            return `
+         <div onclick="cellclicks(${row}, ${col})" 
+         class=" flex items-center justify-center text-[30px] w-30 h-30 bg-red-600 hover:bg-red-600 cursor-pointer rounded-xl  text-blue-500 font-semibold "> 
+         O
+         </div>      
+       `;
+        }
+        function createblankCellHtml(row, col) {
+            return `
+         <div onclick="cellclicks(${row}, ${col})" 
+         class=" w-30 h-30 bg-gray-600 text-[30px] to-blue-700  hover:bg-blue-800  hover:bg-gray-400 shadow-2xl  cursor-pointer text-xl font-bold "> 
+         
+         </div>
+       `;
+        }
+
+
+    </script>
+
+</body>
+
+</html>
